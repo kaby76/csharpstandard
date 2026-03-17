@@ -13,9 +13,11 @@ GrammarTesting=$(realpath ./GrammarTesting)
 # the Standard source is in ../standard
 StandardSource=$(realpath ../standard)
 
-# unpack the tarball
+# unpack the tarball (only if not already extracted)
 pushd "${GrammarTesting}" >& /dev/null
-tar -xf "${TarBall}"
+if [ ! -d "Environment" ]; then
+  tar -xf "${TarBall}"
+fi
 # all unpacked and cwd now $GrammarTesting
 
 # The testing package comes without the antlr jar or executable versions of BuildGrammar & TextModify
@@ -31,19 +33,24 @@ tar -xf "${TarBall}"
 # Download the JAR
 curl -H "Accept: application/zip" --no-progress-meter https://repo1.maven.org/maven2/org/antlr/antlr4/4.9.2/antlr4-4.9.2-complete.jar -o Environment/Antlr/antlr-4.9.2-complete.jar
 
-# Move to the bin folder and create the two shell scripts
+# Move to the bin folder and create the two shell scripts (only if not already present)
 pushd Environment/Tools/bin >& /dev/null
 
+if [ ! -f BuildGrammar ]; then
 cat >BuildGrammar <<EOF
 #!/bin/bash
 dotnet csharpgrammar "\$@"
 EOF
 chmod +x BuildGrammar
+fi
+
+if [ ! -f TextModify ]; then
 cat >TextModify <<EOF
 #!/bin/bash
 echo TextModify is not installed
 EOF
 chmod +x TextModify
+fi
 
 popd >& /dev/null
 
