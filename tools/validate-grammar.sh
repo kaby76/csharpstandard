@@ -1,6 +1,8 @@
 #!/bin/bash
 set -o pipefail
 
+set -x
+
 # Grammar Testing 2.1.0
 # cwd when called is <repo>/tools
 
@@ -54,19 +56,19 @@ fi
 
 popd >& /dev/null
 
-# We should now be able to run the testing package scripts...
-./SetupAndTest "${StandardSource}" -v
+# Use a fixed working directory so we know where the generated .g4 files end up
+WorkingDir="${GrammarTesting}/WorkingDir"
 
-# Print the generated CSharpParser.g4 for inspection
-echo "=== searching for CSharpParser.g4 ==="
-find . -name "CSharpParser.g4" 2>/dev/null
-echo "=== end search ==="
-G4File=$(find . -name "CSharpParser.g4" 2>/dev/null | head -1)
-if [ -n "${G4File}" ]; then
-  echo "=== CSharpParser.g4 (${G4File}) ==="
+# We should now be able to run the testing package scripts...
+./SetupAndTest "${StandardSource}" -v -wd "${WorkingDir}"
+
+# Print the generated CSharpParser.g4 for the Rules modification set
+G4File="${WorkingDir}/Parsing/ParserBuild/Rules/grammar/CSharpParser.g4"
+if [ -f "${G4File}" ]; then
+  echo "=== CSharpParser.g4 ==="
   cat "${G4File}"
   echo "=== end CSharpParser.g4 ==="
 else
-  echo "CSharpParser.g4 not found anywhere under ${GrammarTesting}"
+  echo "CSharpParser.g4 not found at expected path: ${G4File}"
 fi
 
