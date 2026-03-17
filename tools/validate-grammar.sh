@@ -51,12 +51,15 @@ popd >& /dev/null
 ./SetupAndTest "${StandardSource}" -v
 
 # Print the generated CSharpParser.g4 for inspection
-G4File="Environment/Tests/Grammar/CSharpParser.g4"
-if [ -f "${G4File}" ]; then
-  echo "=== CSharpParser.g4 ==="
+echo "=== searching for CSharpParser.g4 ==="
+find . -name "CSharpParser.g4" 2>/dev/null
+echo "=== end search ==="
+G4File=$(find . -name "CSharpParser.g4" 2>/dev/null | head -1)
+if [ -n "${G4File}" ]; then
+  echo "=== CSharpParser.g4 (${G4File}) ==="
   cat "${G4File}"
   echo "=== end CSharpParser.g4 ==="
 else
-  echo "CSharpParser.g4 not found at ${G4File}"
+  echo "CSharpParser.g4 not found anywhere under ${GrammarTesting}"
 fi
 
