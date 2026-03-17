@@ -50,3 +50,13 @@ popd >& /dev/null
 # We should now be able to run the testing package scripts...
 ./SetupAndTest "${StandardSource}" -v
 
+# Print the generated CSharpParser.g4 for inspection
+G4File="Environment/Tests/Grammar/CSharpParser.g4"
+if [ -f "${G4File}" ]; then
+  echo "=== CSharpParser.g4 ==="
+  cat "${G4File}"
+  echo "=== end CSharpParser.g4 ==="
+else
+  echo "CSharpParser.g4 not found at ${G4File}"
+fi
+
