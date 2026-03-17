@@ -168,6 +168,7 @@ array_initializer
     | '{' variable_initializer_list ',' '}'
     ;
 
+
 variable_initializer_list
     : variable_initializer (',' variable_initializer)*
     ;
